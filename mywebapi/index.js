@@ -4,7 +4,11 @@ const express = require('express');
 // expressアプリを生成
 const app = express();
 
-// ルート(http://localhost:3000/api/vi/list）にアクセスしてきたときにHelloを返す
+
+// webフォルダの中身を公開する
+app.use(express.static('web'));
+
+// http://localhost:3000/api/vi/list にアクセスしてきたときにToDoリストを返す
 app.get('/api/v1/list', (req, res) => {
 
   const todoList = [
@@ -16,6 +20,8 @@ app.get('/api/v1/list', (req, res) => {
   // jsonを送信する
   res.json(todoList);
 });
+
+
 
 // ポート3000でサーバーを立てる
 app.listen(3000, () => console.log('Listening on port 3000'));
