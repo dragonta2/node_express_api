@@ -16,12 +16,6 @@ const todoList = [];
 // http://localhost:3000/api/vi/list にアクセスしてきたときにToDoリストを返す
 app.get('/api/v1/list', (req, res) => {
 
-  // const todoList = [
-  //   { title: 'Javascriptを勉強する', done: true },
-  //   { title: 'Node.jsを勉強する', done: false },
-  //   { title: 'Web APIを作る', done: false }
-  // ];
-
   // jsonを送信する
   res.json(todoList);
 });
@@ -51,6 +45,27 @@ app.post('/api/v1/add', (req, res) => {
 
   // 追加した項目をクライアントに返す
   res.json(todoItem);
+});
+
+
+// http://localhost:3000/api/v1/item/:id にDELETEで送信してきたときに
+// 項目を削除する。:idの部分にはIDが入る。 ExpressではURLに「:xxx」と入れることで、URLの一部をxxxという名前のパラメータとして扱うことができます。今回は末尾に「:id」を入れ、項目のIDを受け取るようにしています。このIDはAddボタン追加時に作ったユニークIDです。
+// 例えば
+// http://localhost:3000/api/v1/item/cc7cf63c-ccaf-4401-a611-f19daec0f74e
+// にDELETEメソッドでアクセスすると、idがcc7cf63c-ccaf-4401-a611-f19daec0f74eのものが削除される
+app.delete('/api/v1/item/:id', (req, res) => {
+
+  // URLの:idと同じIDを持つ項目を検索
+  const index = todoList.findIndex((item) => item.id === req.params.id);
+
+  // 項目が見つかった場合
+  if (index >= 0) {
+    const deleted = todoList.splice(index, 1); // indexの位置にある項目を削除
+    console.log('Delete: ' + JSON.stringify(deleted[0]));
+  }
+
+  // ステータスコード200:OKを送信
+  res.sendStatus(200);
 });
 
 
