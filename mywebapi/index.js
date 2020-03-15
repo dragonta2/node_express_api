@@ -69,5 +69,25 @@ app.delete('/api/v1/item/:id', (req, res) => {
 });
 
 
+// 更新用｜チェックボックスの状態を反映させる DELETEとほぼ同じ
+app.put('/api/v1/item/:id', (req, res) => {
+
+  // URLの:idと同じIDを持つ項目を検索
+  const index = todoList.findIndex((item) => item.id === req.params.id);
+
+  // 項目が見つかった場合
+  if (index >= 0) {
+    const item = todoList[index];
+    if (req.body.done) {
+      item.done = req.body.done === 'true';
+    }
+    console.log('Edit: ' + JSON.stringify(item));
+  }
+
+  // ステータスコード200:OKを送信
+  res.sendStatus(200);
+});
+
+
 // ポート3000でサーバーを立てる
 app.listen(3000, () => console.log('Listening on port 3000'));

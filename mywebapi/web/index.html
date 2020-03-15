@@ -22,6 +22,20 @@
 
   <script>
 
+    // チェックボックスの値が変わったときに呼ばれる関数
+    function checkboxListener(event) {
+      const checkbox = event.currentTarget;
+      const id = checkbox.dataset.id;
+
+      const body = new FormData();
+      body.append('done', checkbox.checked.toString());
+
+      // PUTメソッドでAPIにアクセス
+      // 実行後にリスト更新
+      fetch(`./api/v1/item/${id}`, { method: 'PUT', body })
+        .then(() => fetchTodoList());
+    }
+
     // Deleteボタンを押したときに呼ばれる関数
     function deleteButtonListener(event) {
       const button = event.currentTarget;
@@ -40,14 +54,24 @@
       // id="todo-container"要素を取得
       const todoContainer = document.querySelector('#todo-container');
 
-      // #todo-container内にある全ての.delete-buttonを格納
+      /* ----- コンテナの中身を一旦、全部消す一連の処理 ----- */
+
+      // #todo-container内にある全ての.delete-button要素を格納
       const deleteButtonList = todoContainer.querySelectorAll('.delete-button');
 
       // 全ての.delete-buttonをループして削除のクリックイベントを外す
       deleteButtonList.forEach((button) => button.removeEventListener('click', deleteButtonListener));
 
+      // #todo-container内にある全ての.checkbox要素を格納
+      const checkboxList = todoContainer.querySelectorAll('.checkbox');
+
+      // 全ての.checkboxをループしてチェックボックスのチェンジイベントを外す
+      checkboxList.forEach((checkbox) => checkbox.removeEventListener('change', checkboxListener));
+
       // コンテナの中身の要素を全部空にする
       todoContainer.innerHTML = '';
+
+      /* ----- /コンテナの中身を一旦、全部消す一連の処理 ----- */
 
       // json各要素に対して
       for (const item of todoList) {
@@ -55,7 +79,10 @@
         const label = document.createElement('label'); // ラベル
         const checkbox = document.createElement('input'); // チェックボックス
         checkbox.type = 'checkbox';
-        checkbox.checked = item.done; // 項目がdoneならチェック
+        checkbox.classList.add('checkbox');
+        checkbox.checked = item.done; // 項目がdoneならチェック状態にする
+        checkbox.dataset.id = item.id; // data-id属性に アイテムのidの値を入れる。
+        checkbox.addEventListener('change', checkboxListener); // チェンジイベントを与える
         const text = new Text(item.title); // 項目名
 
         const deleteButton = document.createElement('button'); // 削除ボタン
