@@ -16,43 +16,88 @@
   <h1>ToDoリスト</h1>
   <div>
     <ul id="todo-container"></ul>
+    <input type="text" id="new-todo-item-title"><button id="new-todo-item-add-button">Add</button>
   </div>
 
 
   <script>
 
-    // APIからJSONを取得する
-    fetch('./api/v1/list')
-      .then((response) => response.json())
-      .then((todoList) => {
 
-        // id="todo-container"要素を取得
-        const todoContainer = document.querySelector('#todo-container');
+    // todoリストを描画
+    function renderTodoList(todoList) {
 
-        // コンテナの中身を全部消す
-        todoContainer.innerHTML = '';
+      // id="todo-container"要素を取得
+      const todoContainer = document.querySelector('#todo-container');
 
-        // json各要素に対して
-        for (const item of todoList) {
-          const li = document.createElement('li'); // リスト要素
-          const label = document.createElement('label'); // ラベル
-          const checkbox = document.createElement('input'); // チェックボックス
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.done; // 項目がdoneならチェック
-          const text = new Text(item.title); // 項目名
+      // コンテナの中身を全部消す
+      todoContainer.innerHTML = '';
 
-          // ラベルにチェックボックスとテキストを追加
-          label.appendChild(checkbox);
-          label.appendChild(text);
+      // json各要素に対して
+      for (const item of todoList) {
+        const li = document.createElement('li'); // リスト要素
+        const label = document.createElement('label'); // ラベル
+        const checkbox = document.createElement('input'); // チェックボックス
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.done; // 項目がdoneならチェック
+        const text = new Text(item.title); // 項目名
 
-          // リスト要素に先程のラベルを追加する
-          li.appendChild(label);
+        // ラベルにチェックボックスとテキストを追加
+        label.appendChild(checkbox);
+        label.appendChild(text);
 
-          // ToDoリストにリスト要素を追加する
-          todoContainer.appendChild(li);
+        // リスト要素に先程のラベルを追加する
+        li.appendChild(label);
 
-        }
-      });
+        // ToDoリストにリスト要素を追加する
+        todoContainer.appendChild(li);
+
+      }
+    };
+
+    // APIからTODOリストを取得して描画する関数
+    async function fetchTodoList() {
+
+      // APIからJSONを取得する
+      return fetch('./api/v1/list')
+        .then((response) => response.json())
+        .then((todoList) => {
+
+          // htmlにtodoList配列を描画
+          renderTodoList(todoList);
+        });
+    };
+
+    // APIに新しいTODOアイテムをPOSTする関数
+    async function postNewTodoItem(todoItem) {
+
+      // 送信データ'title'にタイトルテキストを追加する
+      const body = new FormData();
+      body.append('title', todoItem.title);
+
+      // Fetch APIを使って、Web APIにPOSTでデータを送信する
+      return fetch('./api/v1/add', {
+        method: 'POST', // POSTメソッドで送信する,
+        body
+      }).then((response) => response.json());
+    }
+
+    const newTodoItemTitleInput = document.querySelector('#new-todo-item-title'); // タイトルテキスト
+    const newTodoAddButton = document.querySelector('#new-todo-item-add-button'); // Addボタン
+
+    // Addボタンをクリックしたときに新しいTODO項目をPOSTする
+    newTodoAddButton.addEventListener('click', (event) => {
+      const title = newTodoItemTitleInput.value;
+
+      // タイトルが空でなければ
+      if (title) {
+
+        // 項目をPOSTしたあとにリストを更新する
+        postNewTodoItem({ title }).then((item) => fetchTodoList());
+      }
+    });
+
+    // 初回データ読み込み
+    fetchTodoList();
   </script>
 </body>
 

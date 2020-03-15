@@ -26,6 +26,9 @@ http://localhost:3000/api/v1/list
 node index.js
 
 
+##### multerとuuidをインストール
+npm install --save multer uuid
+
 
 ### ハマったことメモ
 
