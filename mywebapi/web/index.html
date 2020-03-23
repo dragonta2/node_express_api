@@ -68,7 +68,7 @@
       // 全ての.checkboxをループしてチェックボックスのチェンジイベントを外す
       checkboxList.forEach((checkbox) => checkbox.removeEventListener('change', checkboxListener));
 
-      // コンテナの中身の要素を全部空にする
+      // コンテナの中身の要素を一旦、全部空にする
       todoContainer.innerHTML = '';
 
       /* ----- /コンテナの中身を一旦、全部消す一連の処理 ----- */
@@ -83,7 +83,10 @@
         checkbox.checked = item.done; // 項目がdoneならチェック状態にする
         checkbox.dataset.id = item.id; // data-id属性に アイテムのidの値を入れる。
         checkbox.addEventListener('change', checkboxListener); // チェンジイベントを与える
+
         const text = new Text(item.title); // 項目名
+        // const text = document.createTextNode(item.title) // ○ 項目名 この書き方でもできる
+        // const text = item.title; // ☓ 項目名 この書き方ではダメ
 
         const deleteButton = document.createElement('button'); // 削除ボタン
         deleteButton.innerText = 'Delete';
@@ -93,16 +96,20 @@
 
         // ラベルにチェックボックスとテキストを追加
         label.appendChild(checkbox);
+
+        // ※ 87行目付近でtextをnewでオブジェクトのインスタンス化（あるいはTextNodeに変換する）しないと、ここでエラーが出てしまう（第一引数が、Nodeタイプではないので、appendChildが実行できないと）
         label.appendChild(text);
         label.appendChild(deleteButton);
 
         // リスト要素に先程のラベルを追加する
         li.appendChild(label);
 
-        // ToDoリストにリスト要素を追加する
+        // ToDoリストにリスト要素を追加する（最後に大枠のul#todo-containerに出来上がったliを後ろに追加していく）
         todoContainer.appendChild(li);
-
       }
+
+      // ☓ ここでtodoContainerを生成しようとしても変数liが未定義となってしまう
+      // return todoContainer.appendChild(li);
     };
 
     // APIからTODOリストを取得して描画する関数
@@ -126,9 +133,10 @@
       body.append('title', todoItem.title);
 
       // Fetch APIを使って、Web APIにPOSTでデータを送信する
+      // GET以外のメソッドを使って通信するときは、fetch関数の第二引数で明示的に指定する必要があります。また、POSTするデータはbodyプロパティで指定します。bodyの実体はFormDataです。
       return fetch('./api/v1/add', {
         method: 'POST', // POSTメソッドで送信する,
-        body
+        body // {'title':todoItem.title} （FormDataインスタンス）を送信する
       }).then((response) => response.json());
     }
 

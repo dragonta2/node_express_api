@@ -30,11 +30,17 @@ node index.js
 npm install --save multer uuid
 
 
-### ハマったことメモ
+##### アレンジ｜nodemonをインストール（ファイルを更新してもnodeサーバーを立ち上げ直す必要がない）
+npm install nodemon
 
+npx nodemon index.js
+
+
+### ハマったことメモ
 http://localhost:3000/ にアクセスしても /web/index.htmlを呼び出してくれない
 - 解決法｜ /web/index.htmlがmywebapiディレクトリの外に作られていた・・・（凡ミス）｜30分くらいハマった・・・
 
+nodeサーバーが複数立ち上がっていたりすると、エラーが起きるので、複数立ち上がっていないか確認すること。
 
 
 #### gitコマンドメモ
