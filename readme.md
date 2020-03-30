@@ -22,8 +22,13 @@ http://localhost:3000/api/v1/list
 
 #### コマンドメモ
 
+npm init
+
+npm install --save express
+
+
 ##### nodeサーバーを起動
-node index.js
+node serve.js
 
 
 ##### multerとuuidをインストール
@@ -33,7 +38,7 @@ npm install --save multer uuid
 ##### アレンジ｜nodemonをインストール（ファイルを更新してもnodeサーバーを立ち上げ直す必要がない）
 npm install nodemon
 
-npx nodemon index.js
+npx nodemon server.js
 
 
 ### ハマったことメモ
