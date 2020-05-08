@@ -1,4 +1,4 @@
-# Node.jsとExpressでWeb APIを作ってみよう
+# Web_Node.jsとExpressでWeb APIを作ってみよう
 
 ## Node.jsとExpressでWeb APIを作ってみよう サイトURL
 [https://sbfl.net/blog/2018/08/25/nodejs-express-webapi/](https://sbfl.net/blog/2018/08/25/nodejs-express-webapi/)

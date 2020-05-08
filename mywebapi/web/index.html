@@ -108,7 +108,7 @@
         todoContainer.appendChild(li);
       }
 
-      // ☓ ここでtodoContainerを生成しようとしても変数liが未定義となってしまう
+      // ☓ ここでtodoContainerを生成しようとしても変数liが未定義となってしまう（constのブロックスコープが効いているから）
       // return todoContainer.appendChild(li);
     };
 

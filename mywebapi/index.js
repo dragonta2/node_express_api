@@ -94,5 +94,5 @@ app.put('/api/v1/item/:id', (req, res) => {
 });
 
 
-// ポート番号3000番にサーバーを立てる
-app.listen(3000, () => console.log('Listening on port 3000'));
+// ポート番号3002番にサーバーを立てる
+app.listen(3002, () => console.log('Listening on port 3002'));
